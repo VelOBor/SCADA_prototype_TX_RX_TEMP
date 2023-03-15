@@ -4,12 +4,13 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define PIN_POT A8
+#define PIN_POT1 A0
+#define PIN_POT2 A1
 #define PIN_CE  8
 #define PIN_CSN 9
 RF24 radio(PIN_CE, PIN_CSN);
 
-int potValue[1];
+int potValue[2];
 
 void setup() {
   Serial.begin(115200);
@@ -21,7 +22,10 @@ void setup() {
 }
 
 void loop() {
-  potValue[0] = analogRead(PIN_POT);
-  radio.write(potValue, 1);
-  Serial.println(potValue[0]);
+  potValue[0] = analogRead(PIN_POT1);
+  potValue[1] = analogRead(PIN_POT2);
+  radio.write(&potValue, 4);
+  Serial.print(potValue[0]);
+  Serial.print("  ");
+  Serial.println(potValue[1]);
 }
