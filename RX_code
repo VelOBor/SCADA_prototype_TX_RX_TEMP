@@ -1,0 +1,33 @@
+#include <Arduino.h>
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+#define PIN_LED 3
+#define PIN_CE  7
+#define PIN_CSN 10
+RF24 radio(PIN_CE, PIN_CSN);
+
+int potValue[1];
+
+void setup() {
+Serial.begin(115200);
+pinMode(PIN_LED, OUTPUT);
+  radio.begin();
+  radio.setChannel(110);
+  radio.setDataRate (RF24_1MBPS);
+  radio.setPALevel(RF24_PA_HIGH);
+  radio.openReadingPipe (1, 0x7878787878LL);
+  radio.startListening();
+
+}
+
+void loop() {
+  delay(100);
+if(radio.available()){
+    radio.read(&potValue, sizeof(potValue));
+    Serial.println(potValue[0]);
+  }
+  else {Serial.println("No transmission");}
+}
