@@ -1,0 +1,27 @@
+#include <Arduino.h>
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+#define PIN_POT A8
+#define PIN_CE  8
+#define PIN_CSN 9
+RF24 radio(PIN_CE, PIN_CSN);
+
+int potValue[1];
+
+void setup() {
+  Serial.begin(115200);
+  radio.begin();
+  radio.setChannel(110);
+  radio.setDataRate (RF24_1MBPS);
+  radio.setPALevel(RF24_PA_HIGH);
+  radio.openWritingPipe(0x7878787878LL);
+}
+
+void loop() {
+  potValue[0] = analogRead(PIN_POT);
+  radio.write(potValue, 1);
+  Serial.println(potValue[0]);
+}
